@@ -410,7 +410,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .home-tab {
   padding: 0px;
 }
