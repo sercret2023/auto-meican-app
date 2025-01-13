@@ -1,0 +1,50 @@
+// 颜色变量
+$primary-color: #409EFF;
+$success-color: #67C23A;
+$warning-color: #E6A23C;
+$danger-color: #F56C6C;
+$info-color: #909399;
+
+// 基础样式
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #303133;
+  background-color: #f5f7fa;
+}
+
+// 卡片样式
+.el-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// 按钮样式
+.el-button {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// 表单样式
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.el-input, .el-select {
+  width: 100%;
+}
+
+// 对话框样式
+.el-dialog {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+} 
