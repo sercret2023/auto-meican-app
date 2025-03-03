@@ -30,7 +30,20 @@
           class="main-tabs" 
           @tab-change="handleTabChange"
         >
-          <el-tab-pane label="首页" name="home">
+        <el-tab-pane label="日历视图" name="calendar">
+            <div class="tab-content" :class="slideClass">
+              <CalendarTab 
+                :order-data="orderData"
+                :home-data="homeData"
+                :blacklist="blacklistDetail.noOrderDishes"
+                :order-history="orderHistory"
+                @update:order-data="handleUpdateOrderData"
+                @submit-success="handleSubmitSuccess"
+                @delete-order="handleDeleteOrder"
+              />
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="菜品视图" name="home">
             <div class="tab-content" :class="slideClass">
               <HomeTab 
                 v-model:home-data="homeData"
@@ -74,6 +87,7 @@
 import HomeTab from '@/components/HomeTab.vue'
 import HistoryTab from '@/components/HistoryTab.vue'
 import AutoOrderTab from '@/components/AutoOrderTab.vue'
+import CalendarTab from '@/components/CalendarTab.vue'
 import api from '@/api'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
@@ -85,14 +99,15 @@ export default {
     HomeTab,
     HistoryTab,
     AutoOrderTab,
+    CalendarTab,
     Loading
   },
   data() {
     return {
-      homeData: null,
+      homeData: [],
       token: localStorage.getItem('token') || '无',
       orderData: [],
-      activeTab: 'home',
+      activeTab: window.innerWidth <= 768 ? 'calendar' : 'calendar',
       orderHistory: [],
       blacklist: [],
       lastRefreshTime: {
@@ -139,6 +154,11 @@ export default {
             await this.refreshCurrentTab()
           }
           break
+        case 'calendar':
+          if (!this.orderHistory || this.orderHistory.length === 0 || !this.homeData || !this.orderData) {
+            await this.refreshCurrentTab()
+          }
+          break
         default:
           console.warn(`未知的tab: ${tabName}`)
       }
@@ -157,6 +177,9 @@ export default {
             this.orderHistory = await api.getOrderHistory()
           } else if (tabName === 'auto-order') {
             this.blacklistDetail = await api.getAutoOrderInfo()
+          } else if (tabName === 'calendar') {
+            this.homeData = await api.getHomeData()
+            this.orderHistory = await api.getOrderHistory()
           }
           this.lastRefreshTime[tabName] = now
         } catch (error) {
@@ -200,7 +223,7 @@ export default {
       this.slideClass = direction === 'next' ? 'slide-left' : 'slide-right';
       
       // 定义所有tab的顺序
-      const tabs = ['home', 'history', 'auto-order']
+      const tabs = ['calendar','home', 'history', 'auto-order']
       const currentIndex = tabs.indexOf(this.activeTab)
       let newIndex
 
@@ -481,25 +504,25 @@ export default {
   min-height: calc(100vh - 108px);
   transition: transform 0.3s ease;
   
-  ::v-deep .el-tabs__content {
+  :deep(.el-tabs__content) {
     padding-top: 12px;
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  ::v-deep .el-tabs__header {
+  :deep(.el-tabs__header) {
     margin: 0;
     background: #f5f7fa;
     border-radius: 8px;
     padding: 0 16px;
   }
 
-  ::v-deep .el-tabs__nav-wrap::after {
+  :deep(.el-tabs__nav-wrap::after) {
     height: 1px;
     background-color: #e4e7ed;
   }
 
-  ::v-deep .el-tabs__item {
+  :deep(.el-tabs__item) {
     font-size: 14px;
     font-weight: 500;
     padding: 0 20px;
@@ -518,7 +541,7 @@ export default {
     }
   }
 
-  ::v-deep .el-tabs__active-bar {
+  :deep(.el-tabs__active-bar) {
     height: 2px;
     background-color: #409eff;
     border-radius: 1px;
@@ -583,7 +606,7 @@ export default {
     margin: 12px;
     padding: 12px;
     
-    ::v-deep .el-tabs__content {
+    :deep(.el-tabs__content) {
       padding-top: 8px;
       padding-left: 4px;
       padding-right: 4px;
@@ -638,7 +661,7 @@ button, .el-tabs__item {
     margin: 8px;
     padding: 8px;
     
-    ::v-deep .el-tabs__content {
+    :deep(.el-tabs__content) {
       padding-top: 4px;
       padding-left: 2px;
       padding-right: 2px;
@@ -712,4 +735,4 @@ button, .el-tabs__item {
 // .tab-content {
   // padding: 16px;
 // }
-</style> 
+</style>

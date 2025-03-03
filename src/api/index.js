@@ -46,11 +46,20 @@ export default {
 
   // 获取首页数据
   getHomeData() {
+    // 获取当前工号和日期
+    const accountName = localStorage.getItem('token')
+    const currentDate = new Date().toISOString().split('T')[0]
+    
     // 返回mock数据
     // return Promise.resolve(['红烧肉','宫保鸡丁','鱼香肉丝',])
     
     // 如果需要切换回真实接口，可以注释掉上面的mock数据，使用下面的真实请求
-    return apiClient.get('/meicanTask/dishList')
+    return apiClient.get('/meicanTask/dishList', {
+      params: {
+        accountName,
+        date: currentDate
+      }
+    })
   },
 
   // 新增获取用户列表接口

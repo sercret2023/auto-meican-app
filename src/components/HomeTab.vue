@@ -31,7 +31,7 @@
           <div class="action-buttons">
             <el-button
               v-if="getSelectedDates(item)"
-              type="text"
+              type="warning"
               size="small"
               @click.stop="handleClearDates(item)"
               class="clear-dates-btn"
@@ -785,4 +785,4 @@ export default {
 .el-tag {
   margin-right: 8px;
 }
-</style> 
+</style>
